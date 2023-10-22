@@ -13,6 +13,7 @@ model Todo {
   updatedAt DateTime @updatedAt
   title     String
   content   String?
-  completed_date DateTime
-  responsible_username String?
+  completedDate DateTime
+  responsibleUserName String?
+  isDone Boolean @default(false)
 }
