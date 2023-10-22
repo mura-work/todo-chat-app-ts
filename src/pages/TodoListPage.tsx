@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button } from "@chakra-ui/react";
+import { Button, Text, Checkbox } from "@chakra-ui/react";
 import api from "../services/api";
 
 type Todo = {
@@ -38,7 +38,12 @@ export const TodoListPage = () => {
   return (
     <div>
       {todoLists.map((todo) => {
-        return <div key={todo.id}>{todo.title}</div>;
+        return (
+          <div key={todo.id} className="flex">
+            <Checkbox></Checkbox>
+            <Text fontSize="xl">{todo.title}</Text>
+          </div>
+        );
       })}
       <Button onClick={postTodo}>タスク追加</Button>
     </div>
