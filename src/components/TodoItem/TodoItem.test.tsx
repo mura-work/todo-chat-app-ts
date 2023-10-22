@@ -32,10 +32,17 @@ const updateTodoCompleted = async (id: number, checked: boolean) => {
   todo.isDone = checked;
 };
 
+const deleteTodo = () => {};
+
 describe("TodoItem", () => {
   it("Snap Shot", () => {
     const component = renderer.create(
-      <TodoItem todo={todo} updateTodoCompleted={updateTodoCompleted} />
+      <TodoItem
+        todo={todo}
+        updateTodoCompleted={updateTodoCompleted}
+        disabled={false}
+        deleteTodo={deleteTodo}
+      />
     );
     const tree = component.toJSON();
     expect(tree).toMatchSnapshot();

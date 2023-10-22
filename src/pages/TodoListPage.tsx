@@ -13,6 +13,7 @@ import {
 } from "@chakra-ui/react";
 import api from "../services/api";
 import { TodoType } from "../types/index";
+import { TodoItem } from "components/TodoItem/TodoItem";
 
 type TodoForm = {
   title: string;
@@ -76,19 +77,25 @@ export const TodoListPage = () => {
       .catch((r) => console.log("失敗", r));
   };
 
+  const deleteTodo = async (id: number) => {
+    console.log({ id });
+    await api
+      .delete(`/todo/${id}`)
+      .then(() => setTodoLists((prev) => prev.filter((todo) => todo.id !== id)))
+      .catch((r) => console.log(r));
+  };
+
   return (
     <div className="flex justify-center">
       <div className="w-1/2 m-16">
         {todoLists.map((todo) => {
           return (
-            <div key={todo.id} className="flex">
-              <Checkbox
-                isChecked={todo.isDone}
-                onChange={(e) => updateTodoCompleted(todo.id, e.target.checked)}
-              ></Checkbox>
-              <Text fontSize="xl">{todo.title}</Text>
-              <Badge colorScheme={todo.categories[0].color}>テスト</Badge>
-            </div>
+            <TodoItem
+              key={todo.id}
+              todo={todo}
+              updateTodoCompleted={updateTodoCompleted}
+              deleteTodo={deleteTodo}
+            />
           );
         })}
         <div className="mt-4">
