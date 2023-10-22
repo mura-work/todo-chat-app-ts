@@ -7,35 +7,27 @@ import {
   FormLabel,
   FormErrorMessage,
   FormHelperText,
+  Textarea,
   Input,
+  Badge,
 } from "@chakra-ui/react";
 import api from "../services/api";
-
-type Todo = {
-  id: number;
-  createdAt: Date;
-  updatedAt: Date;
-  title: string;
-  content?: String;
-  completedDate: Date;
-  responsibleUsername?: string;
-  isDone: boolean;
-};
+import { TodoType } from "../types/index";
 
 type TodoForm = {
   title: string;
   content?: string;
   completedDate: string;
-  responsibleUsername?: string;
+  responsibleUserName?: string;
 };
 
 export const TodoListPage = () => {
-  const [todoLists, setTodoLists] = useState<Todo[]>([]);
+  const [todoLists, setTodoLists] = useState<TodoType[]>([]);
   const [todoForm, setTodoForm] = useState<TodoForm>({
     title: "",
     content: "",
     completedDate: new Date().toLocaleDateString("sv-SE"),
-    responsibleUsername: "",
+    responsibleUserName: "",
   });
 
   useEffect(() => {
@@ -43,7 +35,7 @@ export const TodoListPage = () => {
   }, []);
 
   const fetchTodoLists = async () => {
-    const res: Todo[] = await api.get("/todo_lists").then((r) => r.data);
+    const res: TodoType[] = await api.get("/todo_lists").then((r) => r.data);
     setTodoLists(res);
   };
 
@@ -64,13 +56,12 @@ export const TodoListPage = () => {
           title: "",
           content: "",
           completedDate: new Date().toLocaleDateString("sv-SE"),
-          responsibleUsername: "",
+          responsibleUserName: "",
         });
       });
   };
 
   const updateTodoCompleted = async (id: number, checked: boolean) => {
-    console.log({ checked });
     await api
       .put(`/todo/${id}`, {
         checked,
@@ -84,6 +75,7 @@ export const TodoListPage = () => {
       })
       .catch((r) => console.log("失敗", r));
   };
+
   return (
     <div className="flex justify-center">
       <div className="w-1/2 m-16">
@@ -95,6 +87,7 @@ export const TodoListPage = () => {
                 onChange={(e) => updateTodoCompleted(todo.id, e.target.checked)}
               ></Checkbox>
               <Text fontSize="xl">{todo.title}</Text>
+              <Badge colorScheme={todo.categories[0].color}>テスト</Badge>
             </div>
           );
         })}
@@ -111,8 +104,7 @@ export const TodoListPage = () => {
           </FormControl>
           <FormControl className="mt-4">
             <FormLabel>タスク内容</FormLabel>
-            <Input
-              type="text"
+            <Textarea
               value={todoForm.content}
               onChange={(e) =>
                 setTodoForm((prev) => ({ ...prev, content: e.target.value }))
@@ -137,11 +129,11 @@ export const TodoListPage = () => {
             <FormLabel>担当者</FormLabel>
             <Input
               type="text"
-              value={todoForm.responsibleUsername}
+              value={todoForm.responsibleUserName}
               onChange={(e) =>
                 setTodoForm((prev) => ({
                   ...prev,
-                  responsibleUsername: e.target.value,
+                  responsibleUserName: e.target.value,
                 }))
               }
             />

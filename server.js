@@ -13,7 +13,11 @@ app.listen(3002, () =>
 );
 
 app.get("/todo_lists", async (req, res) => {
-  const lists = await prisma.todo.findMany();
+  const lists = await prisma.todo.findMany({
+    include: {
+      categories: true,
+    },
+  });
   res.json(lists);
 });
 
