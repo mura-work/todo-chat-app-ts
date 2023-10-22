@@ -18,9 +18,9 @@ app.get("/todo_lists", async (req, res) => {
 });
 
 app.post("/todo", async (req, res) => {
-  const { title, content, completed_date, responsible_username } = req.body;
+  const { title, content, completedDate, responsibleUserName } = req.body;
   const todo = await prisma.todo.create({
-    data: { title, content, completed_date, responsible_username },
+    data: { title, content, completedDate, responsibleUserName },
   });
   res.json(todo);
 });
