@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { TodoItem } from "./TodoItem";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 import { TodoType } from "../../types/index";
 
-const todo: TodoType = {
+const todoItem: TodoType = {
   id: 1,
   createdAt: new Date(),
   updatedAt: new Date(),
@@ -11,7 +11,7 @@ const todo: TodoType = {
   content: "これはサンプル3のタスクです",
   completedDate: new Date(),
   responsibleUserName: "ユーザー1",
-  isDone: true,
+  isDone: false,
   categories: [
     {
       id: 1,
@@ -22,30 +22,70 @@ const todo: TodoType = {
       color: "green",
       todoLists: [],
     },
+    {
+      id: 2,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      name: "仕事",
+      isValid: true,
+      color: "red",
+      todoLists: [],
+    },
   ],
 };
 
-const updateTodoCompleted = async (id: number, checked: boolean) => {
-  todo.isDone = checked;
+// コンポーネントでありメソッドではないので先頭は大文字にする
+function TodoItemComponent({ ...args }) {
+  const [todo, setTodo] = useState<TodoType>(args.todo);
+
+  const updateTodoCompleted = (id: number, checked: boolean) => {
+    setTodo((prev) => ({ ...prev, isDone: checked }));
+  };
+  return (
+    <TodoItem
+      todo={todo}
+      updateTodoCompleted={updateTodoCompleted}
+      disabled={args.disabled}
+    />
+  );
+}
+
+export const Primary = {
+  args: {
+    todo: todoItem,
+  },
+  render: TodoItemComponent,
 };
 
-/** props ↓ */
-const props = {
-  todo,
-  updateTodoCompleted,
+export const NoCategories = {
+  args: {
+    todo: {
+      ...todoItem,
+      categories: [],
+    },
+  },
+  render: TodoItemComponent,
 };
 
-const Template: ComponentStory<typeof TodoItem> = (args) => (
-  <TodoItem {...args} />
-);
+export const Disabled = {
+  args: {
+    todo: todoItem,
+    disabled: true,
+  },
+  render: TodoItemComponent,
+};
+
+export const Done = {
+  args: {
+    todo: {
+      ...todoItem,
+      isDone: true,
+    },
+  },
+  render: TodoItemComponent,
+};
 
 /** プロパティ ↓ */
 export default {
   title: "TodoItem", // 左側のサイドバーに記載されるコンポーネントの名前
-};
-
-/** パターンごとに表示するユースケースがあれば以下に追加 ↓ */
-export const Primary = Template.bind({});
-Primary.args = {
-  ...props,
 };
