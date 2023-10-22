@@ -15,4 +15,5 @@ model Todo {
   content   String?
   completedDate DateTime
   responsibleUserName String?
+  isDone Boolean @default(false)
 }

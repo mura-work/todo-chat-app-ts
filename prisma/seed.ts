@@ -12,6 +12,7 @@ async function main() {
           content: `これはサンプル${i + 1}のタスクです`,
           completedDate: new Date(),
           responsibleUserName: "ユーザー1",
+          isDone: i % 2 === 0,
         },
       });
     })
