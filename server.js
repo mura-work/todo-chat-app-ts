@@ -51,3 +51,13 @@ app.put("/todo/:id", async (req, res) => {
   });
   res.json(todo);
 });
+
+app.delete("/todo/:id", async (req, res) => {
+  const { id } = req.params;
+  const todo = await prisma.todo.delete({
+    where: {
+      id: Number(id),
+    },
+  });
+  res.json(todo);
+});

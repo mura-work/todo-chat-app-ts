@@ -41,11 +41,16 @@ function TodoItemComponent({ ...args }) {
   const updateTodoCompleted = (id: number, checked: boolean) => {
     setTodo((prev) => ({ ...prev, isDone: checked }));
   };
+
+  const deleteTodo = (id: number) => {
+    alert(`id：${id}のタスクを削除しました`);
+  };
   return (
     <TodoItem
       todo={todo}
       updateTodoCompleted={updateTodoCompleted}
       disabled={args.disabled}
+      deleteTodo={deleteTodo}
     />
   );
 }

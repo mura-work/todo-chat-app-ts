@@ -77,6 +77,14 @@ export const TodoListPage = () => {
       .catch((r) => console.log("失敗", r));
   };
 
+  const deleteTodo = async (id: number) => {
+    console.log({ id });
+    await api
+      .delete(`/todo/${id}`)
+      .then(() => setTodoLists((prev) => prev.filter((todo) => todo.id !== id)))
+      .catch((r) => console.log(r));
+  };
+
   return (
     <div className="flex justify-center">
       <div className="w-1/2 m-16">
@@ -86,6 +94,7 @@ export const TodoListPage = () => {
               key={todo.id}
               todo={todo}
               updateTodoCompleted={updateTodoCompleted}
+              deleteTodo={deleteTodo}
             />
           );
         })}
