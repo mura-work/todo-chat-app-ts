@@ -12,43 +12,22 @@ import {
   Badge,
 } from "@chakra-ui/react";
 import api from "../services/api";
-
-type Category = {
-  id: number;
-  createdAt: Date;
-  updatedAt: Date;
-  name: string;
-  isValid: boolean;
-  color: string;
-  todoLists: Todo[];
-};
-
-type Todo = {
-  id: number;
-  createdAt: Date;
-  updatedAt: Date;
-  title: string;
-  content?: String;
-  completedDate: Date;
-  responsibleUsername?: string;
-  isDone: boolean;
-  categories: Category[];
-};
+import { TodoType } from "../types/index";
 
 type TodoForm = {
   title: string;
   content?: string;
   completedDate: string;
-  responsibleUsername?: string;
+  responsibleUserName?: string;
 };
 
 export const TodoListPage = () => {
-  const [todoLists, setTodoLists] = useState<Todo[]>([]);
+  const [todoLists, setTodoLists] = useState<TodoType[]>([]);
   const [todoForm, setTodoForm] = useState<TodoForm>({
     title: "",
     content: "",
     completedDate: new Date().toLocaleDateString("sv-SE"),
-    responsibleUsername: "",
+    responsibleUserName: "",
   });
 
   useEffect(() => {
@@ -56,7 +35,7 @@ export const TodoListPage = () => {
   }, []);
 
   const fetchTodoLists = async () => {
-    const res: Todo[] = await api.get("/todo_lists").then((r) => r.data);
+    const res: TodoType[] = await api.get("/todo_lists").then((r) => r.data);
     setTodoLists(res);
   };
 
@@ -77,7 +56,7 @@ export const TodoListPage = () => {
           title: "",
           content: "",
           completedDate: new Date().toLocaleDateString("sv-SE"),
-          responsibleUsername: "",
+          responsibleUserName: "",
         });
       });
   };
@@ -150,11 +129,11 @@ export const TodoListPage = () => {
             <FormLabel>担当者</FormLabel>
             <Input
               type="text"
-              value={todoForm.responsibleUsername}
+              value={todoForm.responsibleUserName}
               onChange={(e) =>
                 setTodoForm((prev) => ({
                   ...prev,
-                  responsibleUsername: e.target.value,
+                  responsibleUserName: e.target.value,
                 }))
               }
             />
