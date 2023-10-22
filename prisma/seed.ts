@@ -4,14 +4,18 @@ const prisma = new PrismaClient();
 
 async function main() {
   console.log("todoリストのインサート");
-  await prisma.todo.create({
-    data: {
-      title: "サンプル1",
-      content: "これはサンプルのタスクです",
-      completed_date: new Date(),
-      responsible_username: "ユーザー1",
-    },
-  });
+  Promise.all(
+    [...Array(10)].map(async (_, i) => {
+      await prisma.todo.create({
+        data: {
+          title: `サンプル${i + 1}`,
+          content: `これはサンプル${i + 1}のタスクです`,
+          completedDate: new Date(),
+          responsibleUserName: "ユーザー1",
+        },
+      });
+    })
+  );
 }
 
 main()
