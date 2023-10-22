@@ -13,6 +13,16 @@ import {
 } from "@chakra-ui/react";
 import api from "../services/api";
 
+type Category = {
+  id: number;
+  createdAt: Date;
+  updatedAt: Date;
+  name: string;
+  isValid: boolean;
+  color: string;
+  todoLists: Todo[];
+};
+
 type Todo = {
   id: number;
   createdAt: Date;
@@ -22,6 +32,7 @@ type Todo = {
   completedDate: Date;
   responsibleUsername?: string;
   isDone: boolean;
+  categories: Category[];
 };
 
 type TodoForm = {
@@ -97,7 +108,7 @@ export const TodoListPage = () => {
                 onChange={(e) => updateTodoCompleted(todo.id, e.target.checked)}
               ></Checkbox>
               <Text fontSize="xl">{todo.title}</Text>
-              <Badge colorScheme="orange">テスト</Badge>
+              <Badge colorScheme={todo.categories[0].color}>テスト</Badge>
             </div>
           );
         })}
