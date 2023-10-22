@@ -7,7 +7,9 @@ import {
   FormLabel,
   FormErrorMessage,
   FormHelperText,
+  Textarea,
   Input,
+  Badge,
 } from "@chakra-ui/react";
 import api from "../services/api";
 
@@ -70,7 +72,6 @@ export const TodoListPage = () => {
   };
 
   const updateTodoCompleted = async (id: number, checked: boolean) => {
-    console.log({ checked });
     await api
       .put(`/todo/${id}`, {
         checked,
@@ -84,6 +85,7 @@ export const TodoListPage = () => {
       })
       .catch((r) => console.log("失敗", r));
   };
+
   return (
     <div className="flex justify-center">
       <div className="w-1/2 m-16">
@@ -95,6 +97,7 @@ export const TodoListPage = () => {
                 onChange={(e) => updateTodoCompleted(todo.id, e.target.checked)}
               ></Checkbox>
               <Text fontSize="xl">{todo.title}</Text>
+              <Badge colorScheme="orange">テスト</Badge>
             </div>
           );
         })}
@@ -111,8 +114,7 @@ export const TodoListPage = () => {
           </FormControl>
           <FormControl className="mt-4">
             <FormLabel>タスク内容</FormLabel>
-            <Input
-              type="text"
+            <Textarea
               value={todoForm.content}
               onChange={(e) =>
                 setTodoForm((prev) => ({ ...prev, content: e.target.value }))
