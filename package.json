@@ -22,7 +22,7 @@
     "axios": "^1.5.1",
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
-    "framer-motion": "^4",
+    "framer-motion": "^10.16.4",
     "lodash": "^4.17.21",
     "postcss": "^8.4.31",
     "prisma": "^5.4.2",
