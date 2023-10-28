@@ -5,8 +5,8 @@
   "dependencies": {
     "@chakra-ui/icons": "^2.1.1",
     "@chakra-ui/react": "^2.8.1",
-    "@emotion/react": "^11",
-    "@emotion/styled": "^11",
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
     "@prisma/client": "^5.4.2",
     "@storybook/addon-styling": "^1.3.7",
     "@testing-library/jest-dom": "^5.17.0",
@@ -22,7 +22,7 @@
     "axios": "^1.5.1",
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
-    "framer-motion": "^4",
+    "framer-motion": "^10.16.4",
     "lodash": "^4.17.21",
     "postcss": "^8.4.31",
     "prisma": "^5.4.2",
@@ -89,5 +89,8 @@
   },
   "prisma": {
     "seed": "ts-node --project prisma/tsconfig-seed.json prisma/seed.ts"
+  },
+  "resolutions": {
+    "jackspeak": "2.1.1"
   }
 }
