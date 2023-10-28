@@ -4,7 +4,6 @@ import {
   FormControl,
   FormLabel,
   FormErrorMessage,
-  FormHelperText,
   Textarea,
   Input,
   Badge,
@@ -27,7 +26,7 @@ type TodoForm = {
   title: string;
   content?: string;
   completedDate: string;
-  responsibleUserName?: string;
+  responsibleUserName: string;
   categoryIds: number[];
 };
 
@@ -40,6 +39,15 @@ export const TodoListPage = () => {
     completedDate: new Date().toLocaleDateString("sv-SE"),
     responsibleUserName: "",
     categoryIds: [],
+  });
+  const [todoFormError, setTodoFormError] = useState<{
+    [K in keyof TodoForm]: boolean;
+  }>({
+    title: false,
+    content: false,
+    completedDate: false,
+    responsibleUserName: false,
+    categoryIds: false,
   });
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
@@ -61,6 +69,24 @@ export const TodoListPage = () => {
   };
 
   const postTodo = async () => {
+    let isValidError = false;
+    if (!todoForm.title) {
+      setTodoFormError((prev) => ({
+        ...prev,
+        title: true,
+      }));
+      isValidError = true;
+    }
+    if (!todoForm.responsibleUserName) {
+      setTodoFormError((prev) => ({
+        ...prev,
+        responsibleUserName: true,
+      }));
+      isValidError = true;
+    }
+    if (isValidError) {
+      return;
+    }
     const params = {
       ...todoForm,
       completedDate: new Date(todoForm.completedDate),
@@ -142,7 +168,7 @@ export const TodoListPage = () => {
             <ModalHeader>Todo Form</ModalHeader>
             <ModalCloseButton />
             <ModalBody>
-              <FormControl className="mt-4">
+              <FormControl className="mt-4" isInvalid={todoFormError.title}>
                 <FormLabel>タスク名</FormLabel>
                 <Input
                   type="text"
@@ -154,6 +180,9 @@ export const TodoListPage = () => {
                     }))
                   }
                 />
+                <FormErrorMessage>
+                  タイトルが入力されていません。
+                </FormErrorMessage>
               </FormControl>
               <FormControl className="mt-4">
                 <FormLabel>タスク内容</FormLabel>
@@ -204,7 +233,10 @@ export const TodoListPage = () => {
                 />
               </FormControl>
               {/* いずれユーザー登録機能を作り、ユーザーをプルダウンで表示させたい */}
-              <FormControl className="mt-4">
+              <FormControl
+                className="mt-4"
+                isInvalid={todoFormError.responsibleUserName}
+              >
                 <FormLabel>担当者</FormLabel>
                 <Input
                   type="text"
@@ -216,6 +248,9 @@ export const TodoListPage = () => {
                     }))
                   }
                 />
+                <FormErrorMessage>
+                  担当者が入力されていません。
+                </FormErrorMessage>
               </FormControl>
             </ModalBody>
             <ModalFooter>
