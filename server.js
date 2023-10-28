@@ -22,7 +22,8 @@ app.get("/todo_lists", async (req, res) => {
 });
 
 app.post("/todo", async (req, res) => {
-  const { title, content, completedDate, responsibleUserName } = req.body;
+  const { title, content, completedDate, responsibleUserName, categoryIds } =
+    req.body;
   const todo = await prisma.todo.create({
     data: {
       title,
@@ -30,7 +31,7 @@ app.post("/todo", async (req, res) => {
       completedDate,
       responsibleUserName,
       categories: {
-        create: [],
+        connect: categoryIds.map((id) => ({ id })),
       },
     },
     include: {
@@ -60,4 +61,9 @@ app.delete("/todo/:id", async (req, res) => {
     },
   });
   res.json(todo);
+});
+
+app.get("/categories", async (req, res) => {
+  const categories = await prisma.category.findMany({});
+  res.json(categories.filter((c) => c.isValid));
 });
