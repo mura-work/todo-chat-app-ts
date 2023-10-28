@@ -20,6 +20,7 @@ const todoItem: TodoType = {
       name: "趣味",
       isValid: true,
       color: "green",
+      slug: "hobby",
       todoLists: [],
     },
     {
@@ -28,6 +29,7 @@ const todoItem: TodoType = {
       updatedAt: new Date(),
       name: "仕事",
       isValid: true,
+      slug: "work",
       color: "red",
       todoLists: [],
     },

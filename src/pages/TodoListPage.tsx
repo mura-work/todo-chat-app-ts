@@ -16,6 +16,11 @@ import {
   ModalCloseButton,
   Checkbox,
   CheckboxGroup,
+  Tabs,
+  TabList,
+  TabPanels,
+  Tab,
+  TabPanel,
 } from "@chakra-ui/react";
 import api from "../services/api";
 import { TodoType, CategoryType } from "../types/index";
@@ -30,8 +35,10 @@ type TodoForm = {
   categoryIds: number[];
 };
 
+type TodoListType = Record<string, TodoType[]>;
+
 export const TodoListPage = () => {
-  const [todoLists, setTodoLists] = useState<TodoType[]>([]);
+  const [todoLists, setTodoLists] = useState<TodoListType>({});
   const [categories, setCategories] = useState<CategoryType[]>([]);
   const [todoForm, setTodoForm] = useState<TodoForm>({
     title: "",
@@ -52,12 +59,12 @@ export const TodoListPage = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   useEffect(() => {
-    fetchTodoLists();
     fetchCategories();
+    fetchTodoLists();
   }, []);
 
   const fetchTodoLists = async () => {
-    const res: TodoType[] = await api.get("/todo_lists").then((r) => r.data);
+    const res: TodoListType = await api.get("/todo_lists").then((r) => r.data);
     setTodoLists(res);
   };
 
@@ -95,7 +102,14 @@ export const TodoListPage = () => {
       .post("/todo", params)
       .then((r) => {
         const todo = r.data;
-        setTodoLists((prev) => [...prev, todo]);
+        setTodoLists((prev) => {
+          todo.categories.forEach((c: CategoryType) => {
+            const targetList = prev[c.slug];
+            targetList.push(todo);
+          });
+          prev["all"].push(todo);
+          return prev;
+        });
       })
       .catch((e) => console.log(e))
       .finally(() => {
@@ -116,20 +130,19 @@ export const TodoListPage = () => {
         checked,
       })
       .then((r) => {
-        setTodoLists((prev) =>
-          prev.map((val) =>
-            val.id === id ? { ...val, isDone: r.data.isDone } : val
-          )
-        );
+        // setTodoLists((prev) =>
+        //   prev.map((val) =>
+        //     val.id === id ? { ...val, isDone: r.data.isDone } : val
+        //   )
+        // );
       })
       .catch((r) => console.log("失敗", r));
   };
 
   const deleteTodo = async (id: number) => {
-    await api
-      .delete(`/todo/${id}`)
-      .then(() => setTodoLists((prev) => prev.filter((todo) => todo.id !== id)))
-      .catch((r) => console.log(r));
+    await api.delete(`/todo/${id}`);
+    // .then(() => setTodoLists((prev) => prev.filter((todo) => todo.id !== id)))
+    // .catch((r) => console.log(r));
   };
 
   const updateCategories = (categoryId: number) => {
@@ -147,9 +160,34 @@ export const TodoListPage = () => {
   };
 
   return (
-    <div className="flex justify-center">
-      <div className="w-1/2 m-16">
-        {todoLists.map((todo) => {
+    <div className="mt-10 flex justify-center">
+      <Tabs variant="enclosed">
+        <TabList>
+          {[{ slug: "all", name: "ALL" }, ...categories].map((c) => (
+            <Tab key={c.slug}>{c.name}</Tab>
+          ))}
+        </TabList>
+        <TabPanels>
+          {[{ slug: "all", name: "ALL" }, ...categories].map((category) => {
+            return (
+              <TabPanel key={category.slug}>
+                {(todoLists[category.slug] ?? []).map((todo: TodoType) => {
+                  return (
+                    <TodoItem
+                      key={todo.id}
+                      todo={todo}
+                      updateTodoCompleted={updateTodoCompleted}
+                      deleteTodo={deleteTodo}
+                    />
+                  );
+                })}
+              </TabPanel>
+            );
+          })}
+        </TabPanels>
+      </Tabs>
+      <div className="m-16">
+        {/* {todoLists.map((todo) => {
           return (
             <TodoItem
               key={todo.id}
@@ -158,7 +196,7 @@ export const TodoListPage = () => {
               deleteTodo={deleteTodo}
             />
           );
-        })}
+        })} */}
         <Button className="rounded-full" onClick={() => setIsOpen(true)}>
           <SmallAddIcon className="rounded-full" />
         </Button>

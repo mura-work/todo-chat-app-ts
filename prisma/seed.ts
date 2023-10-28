@@ -6,22 +6,23 @@ async function main() {
   console.log("カテゴリのインサート");
   await Promise.all(
     [
-      { name: "仕事", color: "gray" },
-      { name: "学業", color: "red" },
-      { name: "家事", color: "orange" },
-      { name: "健康", color: "yellow" },
-      { name: "趣味", color: "green" },
-      { name: "スポーツ", color: "teal" },
-      { name: "イベント", color: "blue" },
-      { name: "買い物", color: "cyan" },
-      { name: "旅行", color: "purple" },
-      { name: "社会活動", color: "pink" },
+      { name: "仕事", color: "gray", slug: "work" },
+      { name: "学業", color: "red", slug: "school" },
+      { name: "家事", color: "orange", slug: "housework" },
+      { name: "健康", color: "yellow", slug: "health" },
+      { name: "趣味", color: "green", slug: "hobby" },
+      { name: "スポーツ", color: "teal", slug: "sports" },
+      { name: "イベント", color: "blue", slug: "event" },
+      { name: "買い物", color: "cyan", slug: "shopping" },
+      { name: "旅行", color: "purple", slug: "trip" },
+      { name: "社会活動", color: "pink", slug: "socialActivities" },
     ].map(async (category) => {
       await prisma.category.create({
         data: {
           name: category.name,
           isValid: true,
           color: category.color,
+          slug: category.slug,
           todoLists: {
             create: [],
           },
