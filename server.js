@@ -17,11 +17,17 @@ app.get("/todo_lists", async (req, res) => {
     include: {
       categories: true,
     },
+    orderBy: {
+      createdAt: "desc",
+    },
   });
   const categories = await prisma.category.findMany({});
   const categoryList = await Promise.all(
     categories.map(async (c) => {
       const list = await prisma.todo.findMany({
+        orderBy: {
+          createdAt: "desc",
+        },
         where: {
           categories: { some: { name: c.name } },
         },
@@ -32,7 +38,6 @@ app.get("/todo_lists", async (req, res) => {
       return [c.slug, list];
     })
   );
-  console.log({ categories, categoryList });
   const response = {
     all: allLists,
     ...Object.fromEntries(categoryList),

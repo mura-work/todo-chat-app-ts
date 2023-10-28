@@ -105,9 +105,9 @@ export const TodoListPage = () => {
         setTodoLists((prev) => {
           todo.categories.forEach((c: CategoryType) => {
             const targetList = prev[c.slug];
-            targetList.push(todo);
+            targetList.unshift(todo);
           });
-          prev["all"].push(todo);
+          prev["all"].unshift(todo);
           return prev;
         });
       })
@@ -130,19 +130,32 @@ export const TodoListPage = () => {
         checked,
       })
       .then((r) => {
-        // setTodoLists((prev) =>
-        //   prev.map((val) =>
-        //     val.id === id ? { ...val, isDone: r.data.isDone } : val
-        //   )
-        // );
+        setTodoLists((prev) => {
+          const newTodoList = Object.entries(prev).map(([key, todoList]) => {
+            const newList = todoList.map((todo: TodoType) =>
+              todo.id === id ? { ...todo, isDone: r.data.isDone } : todo
+            );
+            return [key, newList];
+          });
+          return Object.fromEntries(newTodoList);
+        });
       })
       .catch((r) => console.log("失敗", r));
   };
 
   const deleteTodo = async (id: number) => {
-    await api.delete(`/todo/${id}`);
-    // .then(() => setTodoLists((prev) => prev.filter((todo) => todo.id !== id)))
-    // .catch((r) => console.log(r));
+    await api
+      .delete(`/todo/${id}`)
+      .then(() =>
+        setTodoLists((prev) => {
+          const newTodoList = Object.entries(prev).map(([key, todoList]) => {
+            const newList = todoList.filter((todo: TodoType) => todo.id !== id);
+            return [key, newList];
+          });
+          return Object.fromEntries(newTodoList);
+        })
+      )
+      .catch((r) => console.log(r));
   };
 
   const updateCategories = (categoryId: number) => {
@@ -187,16 +200,6 @@ export const TodoListPage = () => {
         </TabPanels>
       </Tabs>
       <div className="m-16">
-        {/* {todoLists.map((todo) => {
-          return (
-            <TodoItem
-              key={todo.id}
-              todo={todo}
-              updateTodoCompleted={updateTodoCompleted}
-              deleteTodo={deleteTodo}
-            />
-          );
-        })} */}
         <Button className="rounded-full" onClick={() => setIsOpen(true)}>
           <SmallAddIcon className="rounded-full" />
         </Button>
