@@ -5,6 +5,7 @@ export type CategoryType = {
   name: string;
   isValid: boolean;
   color: string;
+  slug: string;
   todoLists: TodoType[];
 };
 

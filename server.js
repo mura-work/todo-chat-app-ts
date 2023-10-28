@@ -13,12 +13,36 @@ app.listen(3002, () =>
 );
 
 app.get("/todo_lists", async (req, res) => {
-  const lists = await prisma.todo.findMany({
+  const allLists = await prisma.todo.findMany({
     include: {
       categories: true,
     },
+    orderBy: {
+      createdAt: "desc",
+    },
   });
-  res.json(lists);
+  const categories = await prisma.category.findMany({});
+  const categoryList = await Promise.all(
+    categories.map(async (c) => {
+      const list = await prisma.todo.findMany({
+        orderBy: {
+          createdAt: "desc",
+        },
+        where: {
+          categories: { some: { name: c.name } },
+        },
+        include: {
+          categories: true,
+        },
+      });
+      return [c.slug, list];
+    })
+  );
+  const response = {
+    all: allLists,
+    ...Object.fromEntries(categoryList),
+  };
+  res.json(response);
 });
 
 app.post("/todo", async (req, res) => {

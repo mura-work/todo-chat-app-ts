@@ -23,6 +23,7 @@ const todo: TodoType = {
       name: "趣味",
       isValid: true,
       color: "green",
+      slug: "hobby",
       todoLists: [],
     },
   ],
