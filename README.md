@@ -1,2 +1,2 @@
-## react × TypeScript × PrismaのTodo + チャットアプリ
+## react × Express × PrismaのTodo + チャットアプリ
 - react,Prismaのキャッチアップ
